@@ -27,11 +27,11 @@ This repository seeks to solve the problem by offering a functional alternative,
 
 ## Features
 
-This repository is inspired by and uses several scripts taken from [Genarito's repo](https://github.com/jware-solutions/docker-big-data-cluster). The features include:
+This repository is based on [Genarito's repo](https://github.com/jware-solutions/docker-big-data-cluster). The features include:
 
 - ✅ Ready to deploy in a Docker Swarm cluster: all the networking and port configuration issues have been fixed so you can scale your cluster to as many worker nodes as you need.
 - ⚡️ Hadoop, HDFS, Spark, Scala and PySpark ready to use: all the tools are available inside the container globally so you don't have to fight with environment variables and executable paths.
-- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.4.0 and Python 3.8.5!
+- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.4.0 and Python 3.10.6!
 - ⚙️ Less configuration: we have removed some settings to keep the minimum possible configuration, this way you prevent errors, unexpected behaviors and get the freedom to set parameters via environment variables and have an agile development that does not require rebuilding the Docker image. 
 - 🐍 Python dependencies: we include the most used Python dependencies like Pandas, Numpy and Scipy to be able to work on datasets and perform mathematical operations (you can remove them if you don't need them!)
 
@@ -65,10 +65,11 @@ Only for the first time, you need to format the namenode information directory *
 
 Finally you can use your cluster! Like the toy cluster, you have available some useful URLs:
 
-- \<MASTER IP>:9870 -> HDFS panel
-- \<MASTER IP>:8088 -> Hadoop panel
-- \<MASTER IP>:8080 -> Spark panel
-- \<MASTER IP>:18080 -> Spark applications logs
+- \<MASTER IP>:8888 -> Jupyter Notebook
+- \<MASTER IP>:9870 -> HDFS UI
+- \<MASTER IP>:8088 -> Hadoop UI
+- \<MASTER IP>:8080 -> Spark UI
+- \<MASTER IP>:18080 -> Spark Logs
 
  Enter the master node:
 
@@ -104,19 +105,21 @@ If you check in a worker node that the file is visible in the entire cluster:
 	1. Make the script:
 	
 	```python
-	from pyspark import SparkContext
-	import random
+	from pyspark.sql import SparkSession
+ 	import random
+
+	spark = SparkSession.builder\
+	        .master("yarn")\
+	        .appName('Pi Estimation')\
+	        .getOrCreate()
 
 	NUM_SAMPLES = 1000
-
-	sc = SparkContext("spark://master-node:7077", "Pi Estimation")
-
 
 	def inside(p):
 		x, y = random.random(), random.random()
 		return x*x + y*y < 1
 
-	count = sc.parallelize(range(0, NUM_SAMPLES)) \
+	count = spark.sparkContext.parallelize(range(0, NUM_SAMPLES)) \
 				.filter(inside).count()
 	print("Pi is roughly %f" % (4.0 * count / NUM_SAMPLES))
 	```
