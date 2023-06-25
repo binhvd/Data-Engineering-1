@@ -136,7 +136,7 @@ If you check in a worker node that the file is visible in the entire cluster:
 Adding workers to cluster is easy:
 
 1. Add a worker to your Swarm cluster.
-1. Deploy the stack again with `docker stack deploy -c docker-compose_cluster.yml spark-cluster` (restart is no required).
+1. Deploy the stack again with `docker stack deploy -c docker-compose_cluster.yml spark-cluster` (restart is not required).
 
 
 ### Check Spark logs
