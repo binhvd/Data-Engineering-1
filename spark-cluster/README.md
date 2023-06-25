@@ -63,6 +63,7 @@ docker logs <WORKER CONTAINER ID>
 ```
 
 It should show at the end something like: 
+
 `starting org.apache.spark.deploy.worker.Worker, logging to /sbin/spark-3.4.0-bin-without-hadoop/logs/spark--org.apache.spark.deploy.worker.Worker-1-efa281b30a15.out`
 
 Only for the first time, you need to format the namenode information directory **in Master and Workers nodes. Do not execute this command with valid data stored as you will lose all your data stored in the HDFS**:
@@ -178,8 +179,8 @@ This problem means that Namenode is now running in master node, is associated wi
 If there are nodes that are not listed as active in the HDFS panel you may also need to run the nanemode directory formatting command on the Workers nodes, not just the Driver. See [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-docker-swarm) to get the command.
 
 ### General fixs ###
-1. Login to the Master container and run "stop-all.sh" & "start-all.sh" to restart the services
-2. Stop a container with "docker stop <Container ID>" to re-create a new one
+1. Login to the Master container and run `$ stop-all.sh` & `$ start-all.sh` to restart the services
+2. Stop a container with `$ docker stop <Container ID>` to re-create a new one
 
 [swarm-docs]: https://docs.docker.com/engine/swarm/join-nodes/
 [volumes-docs]: https://docs.docker.com/compose/compose-file/compose-file-v3/#volumes
