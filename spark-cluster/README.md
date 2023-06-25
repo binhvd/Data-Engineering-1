@@ -8,14 +8,12 @@ A ready to go Big Data cluster (Hadoop + Hadoop Streaming + Spark + PySpark) wit
 
 1. [Why?](#why)
 1. [Features](#features)
-1. [Running toy cluster](#running-toy-cluster)
 1. [Running a real cluster in Docker Swarm](#running-a-real-cluster-in-docker-swarm)
 1. [Usage](#usage)
 	1. [HDFS](#hdfs)
 	1. [Spark and PySpark](#spark-and-pyspark)
 1. [Going further](#going-further)
 1. [Frequent problems](#frequent-problems)
-1. [Contributing](#contributing)
 
 
 ## Why?
@@ -163,6 +161,10 @@ This problem means that Namenode is now running in master node, is associated wi
 ### HDFS panel does not show some living nodes
 
 If there are nodes that are not listed as active in the HDFS panel you may also need to run the nanemode directory formatting command on the Workers nodes, not just the Driver. See [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-docker-swarm) to get the command.
+
+### General fixs ###
+1. Login to the Master container and run "stop-all.sh" & "start-all.sh" to restart the services
+2. Stop a container with "docker stop <Container ID>" to re-create a new one
 
 [swarm-docs]: https://docs.docker.com/engine/swarm/join-nodes/
 [volumes-docs]: https://docs.docker.com/compose/compose-file/compose-file-v3/#volumes
