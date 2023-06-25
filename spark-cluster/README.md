@@ -27,52 +27,13 @@ This repository seeks to solve the problem by offering a functional alternative,
 
 ## Features
 
-This repository is inspired by and uses several scripts taken from [Rubenafo's repo][rubenafo-repo] and [Sdesilva26's repo][sdesilva26-repo], however there are several changes introduced; the API is simpler, there is more documentation about usage and some extra features:
+This repository is inspired by and uses several scripts taken from [Genarito's repo](https://github.com/jware-solutions/docker-big-data-cluster). The features include:
 
 - ✅ Ready to deploy in a Docker Swarm cluster: all the networking and port configuration issues have been fixed so you can scale your cluster to as many worker nodes as you need.
 - ⚡️ Hadoop, HDFS, Spark, Scala and PySpark ready to use: all the tools are available inside the container globally so you don't have to fight with environment variables and executable paths.
-- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.1.3 and Python 3.8.5!
+- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.4.0 and Python 3.8.5!
 - ⚙️ Less configuration: we have removed some settings to keep the minimum possible configuration, this way you prevent errors, unexpected behaviors and get the freedom to set parameters via environment variables and have an agile development that does not require rebuilding the Docker image. 
 - 🐍 Python dependencies: we include the most used Python dependencies like Pandas, Numpy and Scipy to be able to work on datasets and perform mathematical operations (you can remove them if you don't need them!)
-
-
-## Running toy cluster
-
-You have two ways to run a cluster on a single machine:
-
-- Use `toy-cluster.sh` script...
-- Or use `docker-compose.yml` file
-
-
-### Using toy-cluster.sh script
-
-The script has the following commands:
-
-- deploy: create a new Docker network, containers (a master and 3 workers) and start these last
-- start: start the existing containers
-- stop: stop the running containers
-- remove: remove all the created containers
-- info:: useful URLs
-
-So, if you want to try your new cluster run `./toy-cluster.sh deploy` to create a network, containers and format namenode HDFS (note that this script will start the containers too). To stop, start again or remove just run the `stop`, `start` or `remove` respectively.
-
-Use `./toy-cluster.sh info` to see the URLs to check Hadoop and Spark clusters status.
-
-
-### Using docker-compose.yml file
-
-The `docker-compose.yml` file has the same structure than `toy-cluster.sh` script except for the use of volumes to preserve HDFS data.
-
-Only for the first time, you need to format the namenode information directory. **Do not execute this command when you are in production with valid data stored as you will lose all your data stored in the HDFS**:
-
-`docker container run --rm -v hdfs_master_data_swarm:/home/hadoop/data/nameNode jwaresolutions/big-data-cluster:<tag> /usr/local/hadoop/bin/hadoop namenode -format`
-
-Then you can manage your toy cluster with the following commands:
-
-- To start the cluster run: `docker-compose up -d`
-- To stop the cluster run: `docker-compose down`
-
-**Important:** the use of `./toy-cluster.sh info` works with this! So you can get the useful cluster URLs.
 
 
 ## Running a real cluster in Docker Swarm
@@ -83,41 +44,31 @@ Here is the important stuff, there are some minors steps to do to make it work: 
 1. Generate a token for the workers to be added ([official doc][swarm-docs]): `docker swarm join-token worker`. It will print on screen a token in a command that must be executed in all the workers to be added.
 1. Run the command generated in the previous step in all workers node: `docker swarm join: --token <token generated> <HOST>:<PORT>`
 
-You have your Docker Swarm cluster! Now you have to label all the nodes to indicate which one will be the *master* and *workers*. On master node run:
+You have your Docker Swarm cluster! 
 
-1. List all cluster nodes to get their ID: `docker node ls`
-1. Label master node as master: `docker node update --label-add role=master <MASTER NODE ID>`
-1. **For every** worker ID node run: `docker node update --label-add role=worker <WORKER NODE ID>`
-
-Create needed network and volumes:
+Create needed network:
 
 ```
-docker network create -d overlay cluster_net_swarm
-docker volume create --name=hdfs_master_data_swarm
-docker volume create --name=hdfs_master_checkpoint_data_swarm
-docker volume create --name=hdfs_worker_data_swarm
+docker network create -d overlay cluster_net
 ```
-
-Now it is time to select a tag of the Docker image. The default is latest but it is not recommended to use it in production. After choose one, set it version on `docker-compose_cluster.yml` and the command below.
-
-Only for the first time, you need to format the namenode information directory **in Master and Workers nodes. Do not execute this command when you are in production with valid data stored as you will lose all your data stored in the HDFS**:
-
-`docker container run --rm -v hdfs_master_data_swarm:/home/hadoop/data/nameNode jwaresolutions/big-data-cluster:<tag> /usr/local/hadoop/bin/hadoop namenode -format`
 
 Now you are ready to deploy your production cluster!
 
-`docker stack deploy -c docker-compose_cluster.yml big-data-cluster`
+`docker stack deploy -c docker-compose_cluster.yml spark-cluster`
 
-<!-- TODO: add ports -->
+Only for the first time, you need to format the namenode information directory **in Master and Workers nodes. Do not execute this command with valid data stored as you will lose all your data stored in the HDFS**:
+
+`docker exec -it <MASTER CONTAINER ID> /home/big_data/format.sh`
+
 
 ## Usage
 
 Finally you can use your cluster! Like the toy cluster, you have available some useful URLs:
 
+- \<MASTER IP>:9870 -> HDFS panel
 - \<MASTER IP>:8088 -> Hadoop panel
 - \<MASTER IP>:8080 -> Spark panel
 - \<MASTER IP>:18080 -> Spark applications logs
-- \<MASTER IP>:9870 -> HDFS panel
 
  Enter the master node:
 
@@ -181,28 +132,16 @@ If you check in a worker node that the file is visible in the entire cluster:
 
 Adding workers to cluster is easy:
 
-1. Add a worker to your Swarm cluster as explained in [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-Docker-Swarm) and label it with `role=worker`.
-1. Increment the number of replicas in `docker-compose_cluster.yml` for `worker` service.
-1. Deploy the stack again with `docker stack deploy -c docker-compose_cluster.yml big-data-cluster` (restart is no required).
-
-
-### Add files/folder inside cluster
-
-In both `docker-compose.yml` (toy cluster) and `docker-compose_cluster.yml` (real cluster) there is a commented line in `volumes` section. Just uncomment it and set the the file/folder in host file and the destination inside master node in cluster! For more information read [official documentation][volumes-docs] about `volumes` setting in Docker Compose.
-
-
-### Add Python dependencies
-
-1. Add the dependency to the `requirements.txt` file.
-1. Build the image again.
+1. Add a worker to your Swarm cluster.
+1. Deploy the stack again with `docker stack deploy -c docker-compose_cluster.yml spark-cluster` (restart is no required).
 
 
 ### Check Spark logs
 
 To check Spark `stderr` and `stdout` files you can run `bash` inside the Worker container and then run the following commands:
 
-- stderr: `cat /sbin/spark-3.1.3-bin-without-hadoop/work/<app id>/<partition id>/stderr`
-- stdout: `cat /sbin/spark-3.1.3-bin-without-hadoop/work/<app id>/<partition id>/stdout`
+- stderr: `cat /sbin/spark-3.4.0-bin-without-hadoop/work/<app id>/<partition id>/stderr`
+- stdout: `cat /sbin/spark-3.4.0-bin-without-hadoop/work/<app id>/<partition id>/stdout`
 
 
 ## Frequent problems
@@ -222,25 +161,6 @@ This problem means that Namenode is now running in master node, is associated wi
 
 If there are nodes that are not listed as active in the HDFS panel you may also need to run the nanemode directory formatting command on the Workers nodes, not just the Driver. See [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-docker-swarm) to get the command.
 
-
-## Contributing
-
-Any kind of help is welcome and appreciated! If you find a bug please submit an issue or make a PR:
-
-1. Fork this repo.
-1. Create a branch where you will develop some changes.
-1. Make a PR.
-
-There are some TODOs to complete:
-
-- [ ] Find a way to prevent *Connection refused* error to avoid format the namenode information directory
-- [ ] Add examples for Hadoop
-- [ ] Add examples for Hadoop Streaming
-- [ ] Add examples for Spark Streaming
-
-
-[rubenafo-repo]: https://github.com/rubenafo/docker-spark-cluster
-[sdesilva26-repo]: https://github.com/sdesilva26/docker-spark
 [swarm-docs]: https://docs.docker.com/engine/swarm/join-nodes/
 [volumes-docs]: https://docs.docker.com/compose/compose-file/compose-file-v3/#volumes
 [connection-refused-docs]: https://cwiki.apache.org/confluence/display/HADOOP2/ConnectionRefused
