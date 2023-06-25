@@ -1,7 +1,7 @@
 
 # Docker Big Data Cluster
 
-A ready to go Big Data cluster (Hadoop + Hadoop Streaming + Spark + PySpark) with Docker and Docker Swarm!
+A ready to go Big Data cluster (Hadoop + Hadoop Streaming + Spark + PySpark + Jupyter Notebook) with Docker and Docker Swarm!
 
 
 ## Index
@@ -29,7 +29,7 @@ This repository is based on [Genarito's repo](https://github.com/jware-solutions
 
 - ✅ Ready to deploy in a Docker Swarm cluster: all the networking and port configuration issues have been fixed so you can scale your cluster to as many worker nodes as you need.
 - ⚡️ Hadoop, HDFS, Spark, Scala and PySpark ready to use: all the tools are available inside the container globally so you don't have to fight with environment variables and executable paths.
-- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.4.0 and Python 3.10.6!
+- 🌟 New technology: our image offers Hadoop 3.3.2, Spark 3.4.0, Python 3.10.6, and Jupyter Notebook 6.5.4!
 - ⚙️ Less configuration: we have removed some settings to keep the minimum possible configuration, this way you prevent errors, unexpected behaviors and get the freedom to set parameters via environment variables and have an agile development that does not require rebuilding the Docker image. 
 - 🐍 Python dependencies: we include the most used Python dependencies like Pandas, Numpy and Scipy to be able to work on datasets and perform mathematical operations (you can remove them if you don't need them!)
 
@@ -106,6 +106,8 @@ If you check in a worker node that the file is visible in the entire cluster:
 <!-- ### TODO: add Hadoop -->
 
 ### Spark and PySpark
+
+Note: You can run PySpark directly on Jupyter Notebook and skip the steps below.
 
 1. You can initiate a PySpark console: `pyspark --master spark://master-node:7077`
 	1. Now, for example, read a file and count lines:
