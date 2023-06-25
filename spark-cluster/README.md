@@ -52,17 +52,24 @@ docker network create -d overlay cluster_net
 
 Now you are ready to deploy your production cluster!
 
-`docker stack deploy -c docker-compose_cluster.yml spark-cluster`
+```
+docker stack deploy -c docker-compose_cluster.yml spark-cluster
+```
 
 Take a look to see if all servers are up and running
 
-`docker logs <WORKER CONTAINER ID>`
+```
+docker logs <WORKER CONTAINER ID>
+```
 
-It should show at the end something like `starting org.apache.spark.deploy.worker.Worker, logging to /sbin/spark-3.4.0-bin-without-hadoop/logs/spark--org.apache.spark.deploy.worker.Worker-1-efa281b30a15.out`
+It should show at the end something like: 
+`starting org.apache.spark.deploy.worker.Worker, logging to /sbin/spark-3.4.0-bin-without-hadoop/logs/spark--org.apache.spark.deploy.worker.Worker-1-efa281b30a15.out`
 
 Only for the first time, you need to format the namenode information directory **in Master and Workers nodes. Do not execute this command with valid data stored as you will lose all your data stored in the HDFS**:
 
-`docker exec -it <MASTER CONTAINER ID> /home/big_data/format.sh`
+```
+docker exec -it <MASTER CONTAINER ID> /home/big_data/format.sh
+```
 
 
 ## Usage
@@ -77,7 +84,9 @@ Finally you can use your cluster! Like the toy cluster, you have available some 
 
  Enter the master node:
 
-`docker container exec -it <MASTER CONTAINER ID> bash`
+```
+docker container exec -it <MASTER CONTAINER ID> bash
+```
 
 
 ### HDFS
