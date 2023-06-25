@@ -2,7 +2,7 @@ version: "3.6"
 services:
   # Master
   master-node:
-    image: "spark-cluster:0.9"
+    image: "binhvd/spark-cluster:0.10"
     command: bash -c "/home/big_data/jupyter.sh; /home/big_data/spark-cmd.sh start master-node;"
     hostname: master-node
     networks:
@@ -13,12 +13,8 @@ services:
       - 9870:9870
       - 18080:18080
       - 8888:8888
-    #volumes:
-      # - "./data:/home/big_data/data" # Your data
-      #- hdfs-master-data:/home/hadoop/data/nameNode
-      #- hdfs-master-checkpoint-data:/home/hadoop/data/namesecondary
     deploy:
-      mode: replicated 
+      mode: replicated
       replicas: 1
       placement:
         constraints:
@@ -26,7 +22,7 @@ services:
 
   # Workers
   worker:
-    image: "spark-cluster:0.9"
+    image: "binhvd/spark-cluster:0.10"
     command: bash -c "/home/big_data/spark-cmd.sh start"
     networks:
       - cluster-net
@@ -34,20 +30,12 @@ services:
       - 8081:8081
     depends_on:
       - "master-node"
-    #volumes:
-    #  - hdfs-worker-data:/home/hadoop/data/dataNode
     deploy:
       mode: global
       placement:
         constraints:
           - node.role!=manager
 
-#volumes:
-  #hdfs-master-data:
-  #hdfs-master-checkpoint-data:
-  #hdfs-worker-data:
-
 # Uses cluster-net network
 networks:
   cluster-net:
-

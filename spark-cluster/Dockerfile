@@ -48,7 +48,7 @@ RUN mv ${HADOOP_STREAMING_HOME}/hadoop-streaming-3.3.2.jar ${HADOOP_STREAMING_HO
     && source ~/.bashrc
 
 # Installs some extra libraries
-RUN apt-get update --fix-missing && apt-get install -y netcat software-properties-common build-essential cmake
+RUN apt-get update --fix-missing && apt-get install -y netcat software-properties-common build-essential cmake libkrb5-dev
 RUN add-apt-repository universe
 
 WORKDIR /home/big_data
