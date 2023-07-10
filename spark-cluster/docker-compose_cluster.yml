@@ -2,7 +2,7 @@ version: "3.6"
 services:
   # Master
   master-node:
-    image: "binhvd/spark-cluster:0.10"
+    image: "binhvd/spark-cluster:0.11"
     command: bash -c "/home/big_data/jupyter.sh; /home/big_data/spark-cmd.sh start master-node;"
     hostname: master-node
     networks:
@@ -27,7 +27,7 @@ services:
 
   # Workers
   worker:
-    image: "binhvd/spark-cluster:0.10"
+    image: "binhvd/spark-cluster:0.11"
     command: bash -c "/home/big_data/spark-cmd.sh start"
     networks:
       - cluster-net
