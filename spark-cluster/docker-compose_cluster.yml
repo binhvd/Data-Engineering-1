@@ -7,6 +7,11 @@ services:
     hostname: master-node
     networks:
       - cluster-net
+    volumes:
+      # - "./data:/home/big_data/data" # Your data
+      - hdfs-master-data:/home/hadoop/data/nameNode
+      - hdfs-master-checkpoint-data:/home/hadoop/data/namesecondary
+      - hdfs-worker-data:/home/hadoop/data/dataNode
     ports:
       - 8088:8088
       - 8080:8080
@@ -26,6 +31,8 @@ services:
     command: bash -c "/home/big_data/spark-cmd.sh start"
     networks:
       - cluster-net
+    volumes:
+      - hdfs-worker-data:/home/hadoop/data/dataNode
     ports:
       - 8081:8081
     depends_on:
@@ -36,6 +43,19 @@ services:
         constraints:
           - node.role!=manager
 
+volumes:
+  hdfs-master-data:
+    external: true
+    name: 'hdfs_master_data'
+  hdfs-master-checkpoint-data:
+    external: true
+    name: 'hdfs_master_checkpoint_data'
+  hdfs-worker-data:
+    external: true
+    name: 'hdfs_worker_data'
+
 # Uses cluster-net network
 networks:
   cluster-net:
+    external: true
+    name: cluster_net
