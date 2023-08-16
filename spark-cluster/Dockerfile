@@ -18,6 +18,7 @@ RUN apt update \
     && ssh-keygen -q -t ed25519 -N '' -f ~/.ssh/id_rsa \
     && cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys \
     && echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config \
+    && echo '    MACs hmac-sha2-256' >> /etc/ssh/ssh_config \
     && service ssh restart
 
 # Downloads and extracts Hadoop

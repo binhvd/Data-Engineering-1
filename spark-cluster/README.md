@@ -78,9 +78,9 @@ docker exec -it <MASTER CONTAINER ID> /home/big_data/format.sh
 Finally you can use your cluster! Like the toy cluster, you have available some useful URLs:
 
 - \<MASTER IP>:8888 -> Jupyter Notebook
-- \<MASTER IP>:9870 -> HDFS UI
-- \<MASTER IP>:8088 -> Hadoop UI
-- \<MASTER IP>:8080 -> Spark UI
+- \<MASTER IP>:9870 -> HDFS
+- \<MASTER IP>:8088 -> Resource Manager
+- \<MASTER IP>:8080 -> Spark
 - \<MASTER IP>:18080 -> Spark Logs
 
  Enter the master node:
