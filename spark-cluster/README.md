@@ -44,12 +44,6 @@ Here is the important stuff, there are some minors steps to do to make it work: 
 
 You have your Docker Swarm cluster! 
 
-Create needed network:
-
-```
-docker network create -d overlay cluster_net
-```
-
 Now you are ready to deploy your production cluster!
 
 ```
