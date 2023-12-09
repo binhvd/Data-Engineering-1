@@ -40,7 +40,7 @@ Here is the important stuff, there are some minors steps to do to make it work: 
 
 1. Start the cluster in your master node: `docker swarm init --advertise-addr <Your Tailscale IP>`.
 1. Generate a token for the workers to be added ([official doc][swarm-docs]): `docker swarm join-token worker`. It will print on screen a token in a command that must be executed in all the workers to be added.
-1. Run the command generated in the previous step in all workers node: `docker swarm join: --token <token generated> <HOST>:<PORT>`
+1. Run the command generated in the previous step in all workers node: `docker swarm join --token <token generated> <HOST>:<PORT>`
 
 You have your Docker Swarm cluster! 
 
