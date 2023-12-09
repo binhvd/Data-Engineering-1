@@ -57,5 +57,7 @@ volumes:
 # Uses cluster-net network
 networks:
   cluster-net:
-    external: true
-    name: cluster_net
+    driver: overlay
+    attachable: true
+    driver_opts:
+      com.docker.network.driver.mtu: 1280
