@@ -1,4 +1,4 @@
-# Ubuntu 20.04 LTS
+# Ubuntu 22.04 LTS
 FROM ubuntu:22.04
 
 # Defines the environment variables required by Hadoop
