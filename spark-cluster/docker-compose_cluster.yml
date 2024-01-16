@@ -9,9 +9,9 @@ services:
       - cluster-net
     volumes:
       # - "./data:/home/big_data/data" # Your data
-      - hdfs-master-data:/home/hadoop/data/nameNode
-      - hdfs-master-checkpoint-data:/home/hadoop/data/namesecondary
-      - hdfs-worker-data:/home/hadoop/data/dataNode
+      - hdfs-master-index:/home/hadoop/data/nameNode
+      - hdfs-master-checkpoint:/home/hadoop/data/namesecondary
+      - hdfs-master-data:/home/hadoop/data/dataNode
     ports:
       - 8088:8088
       - 8080:8080
