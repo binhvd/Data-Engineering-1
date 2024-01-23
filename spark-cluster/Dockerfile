@@ -22,7 +22,7 @@ RUN apt update \
     && service ssh restart
 
 # Downloads and extracts Hadoop
-RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.2/hadoop-3.3.2.tar.gz
+RUN wget https://archive.apache.org/dist/hadoop/common/hadoop-3.3.2/hadoop-3.3.2.tar.gz
 
     # Configures Hadoop and removes downloaded .tar.gz file
 RUN tar -xzvf hadoop-3.3.2.tar.gz \
