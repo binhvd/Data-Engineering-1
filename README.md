@@ -1,4 +1,5 @@
-Content of this repository:
+## Directories
+
 + **docker**: Dockerfile and Composer file for the Data Infrastructure assignment
 + **notebook**: Sample notebooks for storing data on HDFS and crawling data using Selenium
 + **mongodb**: Tutorials and questions for the NoSQL assignment
