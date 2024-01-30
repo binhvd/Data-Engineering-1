@@ -81,19 +81,16 @@ COPY ./config/spark-env.sh .
 COPY ./config/spark-defaults.conf .
 COPY ./config/log4j.properties .
 
-# Cluster cmd
 WORKDIR /home/big_data
+# Cluster cmd
 COPY ./config/spark-cmd.sh .
-RUN chmod +x /home/big_data/spark-cmd.sh
-
 # Jupyter cmd
 COPY ./config/jupyter.sh .
-RUN chmod +x /home/big_data/jupyter.sh
-
 # Format cmd
 COPY ./config/format.sh .
-RUN chmod +x /home/big_data/format.sh
+# Entrypoint
+COPY ./config/entrypoint.sh .
+RUN chmod +x *
 
 WORKDIR /home/notebook
-
-CMD service ssh start && sleep infinity
+CMD [ "/usr/bin/env", "bash", "/home/big_data/entrypoint.sh" ]
