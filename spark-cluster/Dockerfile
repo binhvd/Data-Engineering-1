@@ -79,7 +79,6 @@ RUN curl -fsSL https://tailscale.com/install.sh | sh
 WORKDIR /home/big_data
 
 # Installs common Python3 libs
-RUN apt-get update
 RUN apt-get install -y python3-pip
 COPY ./config/requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
