@@ -52,6 +52,9 @@ RUN mv ${HADOOP_STREAMING_HOME}/hadoop-streaming-3.3.2.jar ${HADOOP_STREAMING_HO
 RUN apt-get update --fix-missing && apt-get install -y netcat software-properties-common build-essential cmake libkrb5-dev
 RUN add-apt-repository universe
 
+# Installs Tailscale
+RUN curl -fsSL https://tailscale.com/install.sh | sh
+
 WORKDIR /home/big_data
 
 # Installs common Python3 libs
