@@ -10,6 +10,6 @@ scikit-survival==0.17.2
 scipy==1.8.1
 seaborn==0.11.2
 typing-extensions==3.7.4.2
-notebook==6.5.4
+notebook==7.0.7
 hdfs==2.7.0
 requests_kerberos==0.14.0
