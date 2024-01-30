@@ -18,6 +18,8 @@ services:
       - 9870:9870
       - 18080:18080
       - 8888:8888
+    env_file:
+      - tailscale.env
     deploy:
       mode: replicated
       replicas: 1
@@ -37,6 +39,8 @@ services:
       - 8081:8081
     depends_on:
       - "master-node"
+    env_file:
+      - tailscale.env
     deploy:
       mode: global
       placement:
