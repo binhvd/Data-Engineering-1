@@ -73,9 +73,6 @@ COPY ./config/spark-env.sh .
 COPY ./config/spark-defaults.conf .
 COPY ./config/log4j.properties .
 
-# Installs Tailscale
-RUN curl -fsSL https://tailscale.com/install.sh | sh
-
 WORKDIR /home/big_data
 
 # Installs common Python3 libs
