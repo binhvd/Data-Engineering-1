@@ -52,17 +52,6 @@ RUN mv ${HADOOP_STREAMING_HOME}/hadoop-streaming-3.3.2.jar ${HADOOP_STREAMING_HO
 RUN apt-get update --fix-missing && apt-get install -y netcat software-properties-common build-essential cmake libkrb5-dev
 RUN add-apt-repository universe
 
-# Installs Tailscale
-RUN curl -fsSL https://tailscale.com/install.sh | sh
-
-WORKDIR /home/big_data
-
-# Installs common Python3 libs
-RUN apt-get update
-RUN apt-get install -y python3-pip
-COPY ./config/requirements.txt ./requirements.txt
-RUN pip3 install -r ./requirements.txt
-
 # Adds some needed environment variables
 ENV HDFS_NAMENODE_USER "root"
 ENV HDFS_DATANODE_USER "root"
@@ -84,7 +73,17 @@ COPY ./config/spark-env.sh .
 COPY ./config/spark-defaults.conf .
 COPY ./config/log4j.properties .
 
+# Installs Tailscale
+RUN curl -fsSL https://tailscale.com/install.sh | sh
+
 WORKDIR /home/big_data
+
+# Installs common Python3 libs
+RUN apt-get update
+RUN apt-get install -y python3-pip
+COPY ./config/requirements.txt ./requirements.txt
+RUN pip3 install -r ./requirements.txt
+
 # Cluster cmd
 COPY ./config/spark-cmd.sh .
 # Jupyter cmd
@@ -93,7 +92,7 @@ COPY ./config/jupyter.sh .
 COPY ./config/format.sh .
 # Entrypoint
 COPY ./config/entrypoint.sh .
-RUN chmod +x *
+RUN chmod +x *.sh
 
 WORKDIR /home/notebook
 CMD [ "/usr/bin/env", "bash", "/home/big_data/entrypoint.sh" ]
