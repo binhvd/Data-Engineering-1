@@ -12,12 +12,6 @@ services:
       - hdfs-master-index:/home/hadoop/data/nameNode
       - hdfs-master-checkpoint:/home/hadoop/data/namesecondary
       - hdfs-master-data:/home/hadoop/data/dataNode
-    ports:
-      - 8088:8088
-      - 8080:8080
-      - 9870:9870
-      - 18080:18080
-      - 8888:8888
     deploy:
       mode: replicated
       replicas: 1
@@ -33,8 +27,6 @@ services:
       - cluster-net
     volumes:
       - hdfs-worker-data:/home/hadoop/data/dataNode
-    ports:
-      - 8081:8081
     depends_on:
       - "master-node"
     deploy:
@@ -60,6 +52,7 @@ volumes:
 # Uses cluster-net network
 networks:
   cluster-net:
-    attachable: true
+    name: host
+    external: true
     driver_opts:
       com.docker.network.driver.mtu: 1280
