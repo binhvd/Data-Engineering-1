@@ -13,7 +13,6 @@ A ready to go Big Data cluster (Hadoop + Hadoop Streaming + Spark + PySpark + Ju
 	1. [HDFS](#hdfs)
 	1. [Spark and PySpark](#spark-and-pyspark)
 1. [Going further](#going-further)
-1. [Frequent problems](#frequent-problems)
 
 
 ## Why?
@@ -47,7 +46,7 @@ You have your Docker Swarm cluster!
 Now you are ready to deploy your production cluster!
 
 ```
-docker stack deploy -c docker-compose_cluster.yml spark-cluster
+docker stack deploy -c cluster.yml spark-cluster
 ```
 
 Take a look to see if all servers are up and running
@@ -59,13 +58,6 @@ docker logs <WORKER CONTAINER ID>
 It should show at the end something like: 
 
 `starting org.apache.spark.deploy.worker.Worker, logging to /sbin/spark-3.4.0-bin-without-hadoop/logs/spark--org.apache.spark.deploy.worker.Worker-1-efa281b30a15.out`
-
-Only for the first time, you need to format the namenode information directory **in Master and Workers nodes. Do not execute this command with valid data stored as you will lose all your data stored in the HDFS**:
-
-```
-docker exec -it <MASTER CONTAINER ID> /home/big_data/format.sh
-```
-
 
 ## Usage
 
@@ -146,7 +138,7 @@ Note: You can run PySpark directly on Jupyter Notebook and skip the steps below.
 Adding workers to cluster is easy:
 
 1. Add a worker to your Swarm cluster.
-1. Deploy the stack again with `docker stack deploy -c docker-compose_cluster.yml spark-cluster` (restart is not required).
+1. Deploy the stack again with `docker stack deploy -c cluster.yml spark-cluster` (restart is not required).
 
 
 ### Check Spark logs
@@ -156,29 +148,5 @@ To check Spark `stderr` and `stdout` files you can run `bash` inside the Worker 
 - stderr: `cat /sbin/spark-3.4.0-bin-without-hadoop/work/<app id>/<partition id>/stderr`
 - stdout: `cat /sbin/spark-3.4.0-bin-without-hadoop/work/<app id>/<partition id>/stdout`
 
-
-## Frequent problems
-
-
-### Connection refused error
-
-Sometimes it throws a *Connection refused* error when run a HDFS command or try to access to DFS from Hadoop/Spark. There is [official documentation][connection-refused-docs] about this problem. The solution that worked for this repository was running the commands listed in [this Stack Overflow answer][connection-refused-answer]. That is why you need to format the namenode directory the first time you are deploying the real cluster (see [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-docker-swarm)).
-
-
-### Port 9870 is not working
-
-This problem means that Namenode is now running in master node, is associated with [Connection refused for HDFS](###connection-refused-for-hdfs) problem and has the same solution. Once Namenode is running the port should be working correctly.
-
-
-### HDFS panel does not show some living nodes
-
-If there are nodes that are not listed as active in the HDFS panel you may also need to run the nanemode directory formatting command on the Workers nodes, not just the Driver. See [Running a real cluster in Docker Swarm](##running-a-real-cluster-in-docker-swarm) to get the command.
-
-### General fixs ###
-1. Login to the Master container and run `$ stop-all.sh` & `$ start-all.sh` to restart the services
-2. Stop a container with `$ docker stop <Container ID>` to re-create a new one
-
 [swarm-docs]: https://docs.docker.com/engine/swarm/join-nodes/
 [volumes-docs]: https://docs.docker.com/compose/compose-file/compose-file-v3/#volumes
-[connection-refused-docs]: https://cwiki.apache.org/confluence/display/HADOOP2/ConnectionRefused
-[connection-refused-answer]: https://stackoverflow.com/a/42281292/7058363
