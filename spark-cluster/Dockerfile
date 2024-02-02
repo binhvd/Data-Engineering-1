@@ -89,8 +89,6 @@ COPY ./config/spark-cmd.sh .
 COPY ./config/jupyter.sh .
 # Format cmd
 COPY ./config/format.sh .
-# Entrypoint
-COPY ./config/entrypoint.sh .
 RUN chmod +x *.sh
 
 WORKDIR /home/notebook
