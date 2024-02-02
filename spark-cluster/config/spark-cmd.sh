@@ -12,6 +12,11 @@ fi
 # Start services in the background
 service ssh start
 
+# Format on the first start
+if [[ $1 = "start" ]] && [[ $2 = "master-node" ]] && [ ! -d "/home/hadoop/data/nameNode/current" ]; then
+	$HADOOP_HOME/bin/hadoop namenode -format
+fi
+		
 echo "Starting HDFS and Yarn"
 $HADOOP_HOME/sbin/start-dfs.sh
 sleep 5
@@ -36,8 +41,6 @@ if [[ $1 = "start" ]]; then
     # Sleeps to prevent connection issues with master
     sleep 5
     /sbin/spark-3.4.0-bin-without-hadoop/sbin/start-worker.sh master-node:7077
-	
-	# TODO: Format on the first start
 	
     sleep infinity
     exit
