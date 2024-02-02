@@ -1,4 +1,15 @@
 #!/bin/bash
+
+# Change dns config
+echo "Updating DNS Config"
+HDFS_SITE="/usr/local/hadoop/etc/hadoop/hdfs-site.xml"
+NETWORK="tailscale0"
+
+if [ -d "/sys/class/net/$NETWORK" ]; then
+	sed -i "/dfs.datanode.dns.interface/{n;s/default/$NETWORK/}" $HDFS_SITE
+fi
+
+# Start services in the background
 service ssh start
 
 echo "Starting HDFS and Yarn"
@@ -25,6 +36,9 @@ if [[ $1 = "start" ]]; then
     # Sleeps to prevent connection issues with master
     sleep 5
     /sbin/spark-3.4.0-bin-without-hadoop/sbin/start-worker.sh master-node:7077
+	
+	# TODO: Format on the first start
+	
     sleep infinity
     exit
 fi

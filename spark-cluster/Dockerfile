@@ -94,4 +94,3 @@ COPY ./config/entrypoint.sh .
 RUN chmod +x *.sh
 
 WORKDIR /home/notebook
-CMD [ "/usr/bin/env", "bash", "/home/big_data/entrypoint.sh" ]
