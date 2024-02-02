@@ -2,7 +2,7 @@ version: "3.6"
 services:
   # Master
   master-node:
-    image: "binhvd/spark-cluster:0.15"
+    image: "binhvd/spark-cluster:0.16"
     command: bash -c "/home/big_data/jupyter.sh; /home/big_data/spark-cmd.sh start master-node;"
     hostname: master-node
     networks:
@@ -21,7 +21,7 @@ services:
 
   # Workers
   worker:
-    image: "binhvd/spark-cluster:0.15"
+    image: "binhvd/spark-cluster:0.16"
     command: bash -c "/home/big_data/spark-cmd.sh start"
     networks:
       - cluster-net
@@ -37,19 +37,15 @@ services:
 
 volumes:
   hdfs-master-index:
-    external: true
     name: 'hdfs_master_index'
   hdfs-master-checkpoint:
-    external: true
     name: 'hdfs_master_checkpoint'
   hdfs-master-data:
-    external: true
     name: 'hdfs_master_data'
   hdfs-worker-data:
-    external: true
     name: 'hdfs_worker_data'
 
-# Uses cluster-net network
+# Uses host network
 networks:
   cluster-net:
     name: host

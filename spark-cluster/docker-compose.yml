@@ -45,16 +45,12 @@ services:
 
 volumes:
   hdfs-master-index:
-    external: true
     name: 'hdfs_master_index'
   hdfs-master-checkpoint:
-    external: true
     name: 'hdfs_master_checkpoint'
   hdfs-master-data:
-    external: true
     name: 'hdfs_master_data'
   hdfs-worker-data:
-    external: true
     name: 'hdfs_worker_data'
 
 # Uses cluster-net network
