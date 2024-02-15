@@ -36,8 +36,6 @@ RUN tar -xzvf hadoop-3.3.2.tar.gz \
     && rm hadoop-3.3.2.tar.gz
 
 # Downloads Apache Spark
-#RUN wget https://dlcdn.apache.org/spark/spark-3.1.3/spark-3.1.3-bin-without-hadoop.tgz
-#RUN wget https://archive.apache.org/dist/spark/spark-3.1.3/spark-3.1.3-bin-without-hadoop.tgz
 RUN wget https://archive.apache.org/dist/spark/spark-3.4.0/spark-3.4.0-bin-without-hadoop.tgz
 
 # Decompress, adds to PATH and then removes .tgz Apache Spark file
@@ -62,6 +60,10 @@ ENV HDFS_SECONDARYNAMENODE_USER "root"
 ENV YARN_RESOURCEMANAGER_USER "root"
 ENV YARN_NODEMANAGER_USER "root"
 ENV PYSPARK_PYTHON "python3"
+# Need for Spark
+ENV HADOOP_CONF_DIR "$HADOOP_HOME/etc/hadoop"
+ENV YARN_CONF_DIR "$HADOOP_HOME/etc/hadoop"
+ENV SPARK_HOME "/sbin/spark-3.4.0-bin-without-hadoop"
 
 # Hadoop settings
 WORKDIR /usr/local/hadoop/etc/hadoop
@@ -77,18 +79,15 @@ COPY ./config/spark-defaults.conf .
 COPY ./config/log4j.properties .
 
 WORKDIR /home/big_data
-
 # Installs common Python3 libs
 RUN apt-get install -y python3-pip
 COPY ./config/requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
 
 # Cluster cmd
-COPY ./config/spark-cmd.sh .
-# Jupyter cmd
-COPY ./config/jupyter.sh .
-# Format cmd
-COPY ./config/format.sh .
+COPY ./config/stop-spark.sh .
 RUN chmod +x *.sh
+COPY ./config/entrypoint.sh /
 
 WORKDIR /home/notebook
+CMD [ "/bin/bash", "-c", "/entrypoint.sh" ]

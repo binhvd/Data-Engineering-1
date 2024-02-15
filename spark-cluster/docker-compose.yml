@@ -2,60 +2,27 @@ version: "3.6"
 services:
   # Master
   master-node:
-    image: "binhvd/spark-cluster:0.14"
-    command: bash -c "/home/big_data/jupyter.sh; /home/big_data/spark-cmd.sh start master-node;"
+    image: "binhvd/spark-cluster:0.17"
     hostname: master-node
     networks:
       - cluster-net
-    volumes:
-      # - "./data:/home/big_data/data" # Your data
-      - hdfs-master-index:/home/hadoop/data/nameNode
-      - hdfs-master-checkpoint:/home/hadoop/data/namesecondary
-      - hdfs-master-data:/home/hadoop/data/dataNode
     ports:
       - 8088:8088
       - 8080:8080
       - 9870:9870
       - 18080:18080
       - 8888:8888
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.role==manager
 
   # Workers
   worker:
-    image: "binhvd/spark-cluster:0.14"
-    command: bash -c "/home/big_data/spark-cmd.sh start"
+    image: "binhvd/spark-cluster:0.17"
     networks:
       - cluster-net
-    volumes:
-      - hdfs-worker-data:/home/hadoop/data/dataNode
     ports:
       - 8081:8081
     depends_on:
       - "master-node"
-    deploy:
-      mode: global
-      placement:
-        constraints:
-          - node.role!=manager
-
-volumes:
-  hdfs-master-index:
-    name: 'hdfs_master_index'
-  hdfs-master-checkpoint:
-    name: 'hdfs_master_checkpoint'
-  hdfs-master-data:
-    name: 'hdfs_master_data'
-  hdfs-worker-data:
-    name: 'hdfs_worker_data'
 
 # Uses cluster-net network
 networks:
   cluster-net:
-    attachable: true
-    driver_opts:
-      com.docker.network.driver.mtu: 1280

@@ -2,11 +2,11 @@ version: "3.6"
 services:
   # Master
   master-node:
-    image: "binhvd/spark-cluster:0.16"
-    command: bash -c "/home/big_data/jupyter.sh; /home/big_data/spark-cmd.sh start master-node;"
+    image: "binhvd/spark-cluster:0.17"
     hostname: master-node
     networks:
       - cluster-net
+    # Keep data persistence
     volumes:
       # - "./data:/home/big_data/data" # Your data
       - hdfs-master-index:/home/hadoop/data/nameNode
@@ -21,10 +21,10 @@ services:
 
   # Workers
   worker:
-    image: "binhvd/spark-cluster:0.16"
-    command: bash -c "/home/big_data/spark-cmd.sh start"
+    image: "binhvd/spark-cluster:0.17"
     networks:
       - cluster-net
+    # Keep data persistence
     volumes:
       - hdfs-worker-data:/home/hadoop/data/dataNode
     depends_on:
@@ -35,6 +35,7 @@ services:
         constraints:
           - node.role!=manager
 
+# Define names for easy deletion
 volumes:
   hdfs-master-index:
     name: 'hdfs_master_index'
